@@ -1,0 +1,132 @@
+
+Summary Satistics
+
+. sum sdg gov gdp pop fdi
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+         sdg |        240    62.95883    6.886812       43.7      73.93
+         gov |        240   -.0955987    .5584459  -1.206501   1.604282
+         gdp |        240    1.58e+12    2.95e+12   1.74e+10   1.72e+13
+         pop |        240    1.603325    1.602077    -.47485   11.58998
+         fdi |        240    2.227195     1.72319   -2.75744   9.660265
+
+. 
+
+Correlation
+. pwcorr sdg gov gdp pop fdi,sig
+
+             |      sdg      gov      gdp      pop      fdi
+-------------+---------------------------------------------
+         sdg |   1.0000 
+             |
+             |
+         gov |   0.1609   1.0000 
+             |   0.0126
+             |
+         gdp |   0.2630   0.2391   1.0000 
+             |   0.0000   0.0002
+             |
+         pop |  -0.3804   0.3114  -0.3039   1.0000 
+             |   0.0000   0.0000   0.0000
+             |
+         fdi |   0.0029   0.1217  -0.0065   0.1399   1.0000 
+             |   0.9639   0.0598   0.9198   0.0303
+             |
+
+. 
+
+Variance Inflation Factor( for checking Multicollinearity)
+. vif
+
+    Variable |       VIF       1/VIF  
+-------------+----------------------
+         pop |      1.35    0.743429
+         gov |      1.29    0.776061
+         gdp |      1.28    0.784302
+         fdi |      1.03    0.973615
+-------------+----------------------
+    Mean VIF |      1.23
+
+. 
+
+Panel Diagnosis Tests
+
+1. Cross sectional dependence test
+
+. xtcd lnsdg gov lngdp pop lnfdi
+
+
+ Average correlation coefficients & Pesaran (2004) CD test
+
+ Variables series tested: lnsdg gov lngdp pop lnfdi
+                               Group variable: c_id
+                             Number of groups: 10
+                    Average # of observations: 26.67
+                                     Panel is: unbalanced
+
+---------------------------------------------------------
+    Variable |    CD-test  p-value     corr  abs(corr)
+-------------+-------------------------------------------
+       lnsdg |      31.62    0.000    0.962    0.962
+-------------+-------------------------------------------
+         gov |      -0.59    0.554    -0.018   0.473
+-------------+-------------------------------------------
+       lngdp |      31.69    0.000    0.964    0.964
+-------------+-------------------------------------------
+         pop |       9.63    0.000    0.293    0.537
+-------------+-------------------------------------------
+       lnfdi |      -0.01    0.995    -0.000   0.219
+---------------------------------------------------------
+ Notes: Under the null hypothesis of cross-section 
+        independence CD ~ N(0,1)
+
+. 
+
+
+
+2. Unit root test
+
+
+3. Cointegration test
+
+
+
+Baseline Model Result (System GMM)
+
+. xtdpdsys lnsdg gov lngdp pop l.lnfdi, lags(1) artests(2)
+
+System dynamic panel-data estimation            Number of obs     =        230
+Group variable: c_id                            Number of groups  =         10
+Time variable: year
+                                                Obs per group:
+                                                              min =         23
+                                                              avg =         23
+                                                              max =         23
+
+Number of instruments =    200                  Wald chi2(5)      =   24750.06
+                                                Prob > chi2       =     0.0000
+One-step results
+------------------------------------------------------------------------------
+       lnsdg | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       lnsdg |
+         L1. |   .9445095   .0111273    84.88   0.000     .9227005    .9663186
+             |
+         gov |   .0053033   .0016173     3.28   0.001     .0021335    .0084731
+       lngdp |   .0061426   .0014567     4.22   0.000     .0032875    .0089977
+         pop |  -.0023789    .000474    -5.02   0.000     -.003308   -.0014499
+             |
+       lnfdi |
+         L1. |   .0042104   .0022421     1.88   0.060    -.0001841    .0086049
+             |
+       _cons |   .0645967    .032298     2.00   0.045     .0012937    .1278997
+------------------------------------------------------------------------------
+Instruments for differenced equation
+        GMM-type: L(2/.).lnsdg
+        Standard: D.gov D.lngdp D.pop LD.lnfdi
+Instruments for level equation
+        GMM-type: LD.lnsdg
+        Standard: _cons
+
+. 
